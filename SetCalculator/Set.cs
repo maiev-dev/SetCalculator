@@ -117,14 +117,15 @@ namespace SetCalculator {
             this.describeVector = new List<bool>(universalSetMembers.Count);
             foreach (var _ in universalSetMembers) describeVector.Add(false);
             foreach (var member in setMembers)
-            {
-                
+            { 
                 for (int i = 0; i < universalSetMembers.Count; i++)
                 {
-                    if ((dynamic)universalSetMembers[i] == (dynamic)member)
+                    
+                    if ((universalSetMembers[i] as IComparable).Equals(member))
                     {
                         describeVector[i] = true;
                     }
+                    
                 }
                 
             }

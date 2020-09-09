@@ -9,16 +9,36 @@ namespace SetCalculator
    
     class SetCalculator
     {
-        const string endOfInput = "eof";
-        const string close = "close";
+        private const string endOfInput = "eof";
+        private const string close = "close";
+        private static Set<int> GetSetFromConsole(List<int> UniversalSet)
+        {
+            Set<int> set = new Set<int>(UniversalSet);
+            string candidate = Console.ReadLine();
+            while (candidate != endOfInput)
+            {
+                int i_candidate = Convert.ToInt32(candidate);
+                try
+                {
+                    set.Push(i_candidate);
+                }
+                catch (ArgumentException exception)
+                {
+                    Console.WriteLine(exception.Message);
+                }
+                candidate = Console.ReadLine();
+            }
+            return set;
+        }
         public static int Main()
         {
 
             Console.Write("Добро пожаловать в калькулятор множеств! \n" +
-                            "Текущая версия приложения - 0.9.0 \n" +
+                            "Текущая версия приложения - 0.9.2 \n" +
+                            "Автор - Гурков Денис \n" +
                             "\n");
 
-            Console.WriteLine("Введите члены универсального множества, ввод закончите символом endOfInput");
+            Console.WriteLine("Введите члены универсального множества, ввод закончите символом eof");
             List<int> UniversalSet = new List<int>();
             string candidate = Console.ReadLine();
             while (candidate != endOfInput)
@@ -34,44 +54,15 @@ namespace SetCalculator
                 }
                 candidate = Console.ReadLine();
             }
-            Set<int> set1 = new Set<int>(UniversalSet);
-            Set<int> set2 = new Set<int>(UniversalSet);
-
+          
             Console.WriteLine("Введите множество A");
-            candidate = Console.ReadLine();
-            while (candidate != endOfInput)
-            {
-                int i_candidate = Convert.ToInt32(candidate);
-                try
-                {
-                    set1.Push(i_candidate);
-                }
-                catch (ArgumentException exception)
-                {
-                    Console.WriteLine(exception.Message);
-                }
-                candidate = Console.ReadLine();
-            }
 
+            Set<int> set1 = GetSetFromConsole(UniversalSet);
             set1.Print();
             set1.PrintDescribeVector();
+            
             Console.WriteLine("Введите множество B");
-            candidate = Console.ReadLine();
-            while (candidate != endOfInput)
-            {
-                int i_candidate = Convert.ToInt32(candidate);
-                
-                try
-                {
-                    set2.Push(i_candidate);
-                }
-                catch (ArgumentException exception)
-                {
-                    Console.WriteLine(exception.Message);
-                }
-                candidate = Console.ReadLine();
-            }
-
+            Set<int> set2 = GetSetFromConsole(UniversalSet);
             set2.Print();
             set2.PrintDescribeVector();
 
@@ -89,32 +80,30 @@ namespace SetCalculator
             while(operation != close)
             {
                 Set<int> result = new Set<int>(UniversalSet);
-                switch (operation)
+                try
                 {
-                    case "A&B":
-                        result = set1 & set2;
-                        break;
-                    case "A|B":
-                        result = set1 | set2;
-                        break;
-                    case "!A":
-                        result = !set1;
-                        break;
-                    case "!B":
-                        result = !set2;
-                        break;
-                    case "A/B":
-                        result = set1 / set2;
-                        break;
-                    case "B/A":
-                        result = set2 / set1;
-                        break;
-                    default:
-                        Console.WriteLine("Такой операции у меня нет");
-                        break;
+                    result = operation switch
+                    {
+                        "A&B" => set1 & set2,
+                        "A|B" => set1 | set2,
+                        "!A" => !set1,
+                        "!B" => !set2,
+                        "A/B" => set1 / set2,
+                        "B/A" => set2 / set1,
+                        _ => throw new ArgumentException("У меня нет такой операции")
+                    };
+                    result.Print();
+                    result.PrintDescribeVector();
+                    Console.Write("\n");
                 }
-                result.Print();
-                operation = Console.ReadLine().DeleteSpaces();
+                catch (ArgumentException exception)
+                {
+                    Console.WriteLine(exception.Message);
+                }
+                finally
+                {
+                    operation = Console.ReadLine().DeleteSpaces();
+                }
             }
             return 0;
         }
