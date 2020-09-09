@@ -13,6 +13,8 @@ namespace SetCalculator {
 	    {
             setMembers = new List<T>();
             this.universalSetMembers = universalSetMembers;
+            this.describeVector = new List<bool>(universalSetMembers.Count);
+            foreach (var _ in universalSetMembers) describeVector.Add(false);
             foreach (var member in members)
             {
                 this.Push(member);
@@ -34,15 +36,18 @@ namespace SetCalculator {
             return new Set<T>(universalSetMembers, members.ToArray());
         }
 
-        
-
-
         public void Push(T value)
         {
             if (!setMembers.Contains(value) && universalSetMembers.Contains(value))
             {
                 setMembers.Add(value);
-                InitializeDeskribeVector();
+                for (int i = 0; i < universalSetMembers.Count; ++i)
+                {
+                    if ((universalSetMembers[i] as IComparable).Equals(value))
+                    {
+                        describeVector[i] = true;
+                    }
+                }
             }
             else
             {
@@ -114,8 +119,6 @@ namespace SetCalculator {
 
         private void InitializeDeskribeVector()
         {
-            this.describeVector = new List<bool>(universalSetMembers.Count);
-            foreach (var _ in universalSetMembers) describeVector.Add(false);
             foreach (var member in setMembers)
             { 
                 for (int i = 0; i < universalSetMembers.Count; i++)

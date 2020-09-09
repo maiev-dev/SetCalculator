@@ -34,11 +34,13 @@ namespace SetCalculator
         {
 
             Console.Write("Добро пожаловать в калькулятор множеств! \n" +
-                            "Текущая версия приложения - 0.9.2 \n" +
+                            "Текущая версия приложения - 0.9.3 \n" +
                             "Автор - Гурков Денис \n" +
+                            "Последняя версия проекта доступна по ссылке - https://github.com/maiev-dev/SetCalculator \n"+
                             "\n");
 
             Console.WriteLine("Введите члены универсального множества, ввод закончите символом eof");
+
             List<int> UniversalSet = new List<int>();
             string candidate = Console.ReadLine();
             while (candidate != endOfInput)
@@ -104,6 +106,7 @@ namespace SetCalculator
                 {
                     operation = Console.ReadLine().DeleteSpaces();
                 }
+                
             }
             return 0;
         }
