@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.CompilerServices;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -9,6 +10,7 @@ namespace SetCalculator
    
     class SetCalculator
     {
+        
         private const string endOfInput = "eof";
         private const string close = "close";
         private static Set<int> GetSetFromConsole(List<int> UniversalSet)
@@ -17,14 +19,22 @@ namespace SetCalculator
             string candidate = Console.ReadLine();
             while (candidate != endOfInput)
             {
-                int i_candidate = Convert.ToInt32(candidate);
+                int i_candidate;
                 try
                 {
-                    set.Push(i_candidate);
+                    i_candidate = Convert.ToInt32(candidate);
+                    try
+                    {
+                        set.Push(i_candidate);
+                    }
+                    catch (ArgumentException exception)
+                    {
+                        Console.WriteLine(exception.Message);
+                    }
                 }
-                catch (ArgumentException exception)
+                catch(FormatException)
                 {
-                    Console.WriteLine(exception.Message);
+                    Console.WriteLine("Входная строка имела неверный формат");
                 }
                 candidate = Console.ReadLine();
             }
@@ -32,9 +42,9 @@ namespace SetCalculator
         }
         public static int Main()
         {
-
+          
             Console.Write("Добро пожаловать в калькулятор множеств! \n" +
-                            "Текущая версия приложения - 0.9.3 \n" +
+                            "Текущая версия приложения - 0.9.4 \n" +
                             "Автор - Гурков Денис \n" +
                             "Последняя версия проекта доступна по ссылке - https://github.com/maiev-dev/SetCalculator \n"+
                             "\n");
@@ -74,37 +84,50 @@ namespace SetCalculator
                 "A | B - Объединение множеств \n" +
                 "!A - Дополнение множества A до универсального \n" +
                 "A / B - Разность множеств \n" + 
+                "A C B - A является подмножеством B \n", 
                 "Когда надоест введите close"
                 );
 
             string operation = Console.ReadLine().DeleteSpaces();
-
+            
             while(operation != close)
             {
-                Set<int> result = new Set<int>(UniversalSet);
-                try
+                if (operation == "B&A") operation = "A&B";
+                if (operation == "B|A") operation = "A|B"; 
+                if (operation == "ACB" || operation == "BCA")
                 {
-                    result = operation switch
-                    {
-                        "A&B" => set1 & set2,
-                        "A|B" => set1 | set2,
-                        "!A" => !set1,
-                        "!B" => !set2,
-                        "A/B" => set1 / set2,
-                        "B/A" => set2 / set1,
-                        _ => throw new ArgumentException("У меня нет такой операции")
-                    };
-                    result.Print();
-                    result.PrintDescribeVector();
-                    Console.Write("\n");
-                }
-                catch (ArgumentException exception)
-                {
-                    Console.WriteLine(exception.Message);
-                }
-                finally
-                {
+                    bool result;
+                    if (operation == "ACB") result = set1.IsSubset(set2);
+                    else result = set2.IsSubset(set1);
+                    Console.WriteLine(result);
                     operation = Console.ReadLine().DeleteSpaces();
+                }
+                else
+                {
+                    try { 
+                        var result = operation switch
+                        {
+                            "A&B" => set1 & set2,
+                            "A|B" => set1 | set2,
+                            "!A" => !set1,
+                            "!B" => !set2,
+                            "A/B" => set1 / set2,
+                            "B/A" => set2 / set1,
+                            _ => throw new ArgumentException("У меня нет такой операции")
+                        };
+                        result.Print();
+                        result.PrintDescribeVector();
+                        Console.Write("\n");
+                    }
+
+                    catch (ArgumentException exception)
+                    {
+                        Console.WriteLine(exception.Message);
+                    }
+                    finally
+                    {
+                        operation = Console.ReadLine().DeleteSpaces();
+                    }
                 }
                 
             }

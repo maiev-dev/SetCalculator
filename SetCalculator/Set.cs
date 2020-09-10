@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 namespace SetCalculator { 
-    public class Set<T> 
+    public class Set<T> where T: IComparable
     {
         public List<T> setMembers { get; private set; }
         private readonly List<T> universalSetMembers;
@@ -91,6 +91,26 @@ namespace SetCalculator {
                 resultDescribeVector.Add(!operand.describeVector[i]);
             }
             return Set<T>.FromDescribeVector(resultDescribeVector, operand.universalSetMembers);
+        }
+
+        public static bool operator== (Set<T> leftOperand, Set<T> rightOperand)
+        {
+            if (leftOperand.describeVector.Count != rightOperand.describeVector.Count) return false;
+            for (int i = 0; i < leftOperand.describeVector.Count; ++i)
+            {
+                if ((leftOperand.describeVector[i] != rightOperand.describeVector[i])) return false;
+            }
+            return true;
+        }
+
+        public static bool operator!=(Set<T> leftOperand, Set<T> rightOperand)
+        {
+            return !(leftOperand == rightOperand);
+        } 
+
+        public bool IsSubset(Set<T> rightOperand)
+        {
+            return this == (this & rightOperand);
         }
 
         public void Print()

@@ -26,6 +26,6 @@ namespace SetCalculator {
             return result;
         }
 
-
+        
     }
 }
