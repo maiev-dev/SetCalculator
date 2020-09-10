@@ -167,5 +167,18 @@ namespace SetCalculator {
             }
             return Set<T>.FromDescribeVector(resultDescribeVector, leftOperand.universalSetMembers);
         }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Set<T> set &&
+                   EqualityComparer<List<T>>.Default.Equals(setMembers, set.setMembers) &&
+                   EqualityComparer<List<T>>.Default.Equals(universalSetMembers, set.universalSetMembers) &&
+                   EqualityComparer<List<bool>>.Default.Equals(describeVector, set.describeVector);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(setMembers, universalSetMembers, describeVector);
+        }
     }
 }
