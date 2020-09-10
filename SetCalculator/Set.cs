@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SetCalculator { 
     public class Set<T> where T: IComparable
@@ -95,12 +96,7 @@ namespace SetCalculator {
 
         public static bool operator== (Set<T> leftOperand, Set<T> rightOperand)
         {
-            if (leftOperand.describeVector.Count != rightOperand.describeVector.Count) return false;
-            for (int i = 0; i < leftOperand.describeVector.Count; ++i)
-            {
-                if ((leftOperand.describeVector[i] != rightOperand.describeVector[i])) return false;
-            }
-            return true;
+            return leftOperand.Equals(rightOperand);
         }
 
         public static bool operator!=(Set<T> leftOperand, Set<T> rightOperand)
@@ -150,7 +146,6 @@ namespace SetCalculator {
                     }
                     
                 }
-                
             }
         }
         
@@ -171,9 +166,8 @@ namespace SetCalculator {
         public override bool Equals(object obj)
         {
             return obj is Set<T> set &&
-                   EqualityComparer<List<T>>.Default.Equals(setMembers, set.setMembers) &&
-                   EqualityComparer<List<T>>.Default.Equals(universalSetMembers, set.universalSetMembers) &&
-                   EqualityComparer<List<bool>>.Default.Equals(describeVector, set.describeVector);
+                   this.setMembers.SequenceEqual(set.setMembers) &&
+                   this.universalSetMembers.SequenceEqual(set.universalSetMembers);
         }
 
         public override int GetHashCode()

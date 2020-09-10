@@ -14,7 +14,7 @@ namespace SetCalculator
         public static int Main()
         {
             Console.Write("Добро пожаловать в калькулятор множеств! \n" +
-                            "Текущая версия приложения - 0.9.5 \n" +
+                            "Текущая версия приложения - 0.9.6 \n" +
                             "Автор - Гурков Денис \n" +
                             "Последняя версия проекта доступна по ссылке - https://github.com/maiev-dev/SetCalculator \n" +
                             "\n");
